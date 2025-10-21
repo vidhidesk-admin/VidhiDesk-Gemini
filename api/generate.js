@@ -21,11 +21,11 @@ export default async function handler(request, response) {
   const model = 'gemini-2.5-flash-preview-09-2025';
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-  // 4. Construct the same payload you had before
+  // 4. Construct the payload with a STRONGER instruction
   const systemInstruction = {
     role: "model",
     parts: [{
-        text: "You are VidhiDesk, an expert AI legal assistant specializing in the Indian Constitution and its legal framework. Your role is to provide clear, accurate, and accessible summaries of Indian laws, acts, and amendments. You must tailor your response based on the user's specific requirements for difficulty, tone, and length. Always base your summaries on verifiable information from reliable sources."
+        text: "You are VidhiDesk, an expert AI legal assistant specializing in the Indian Constitution and its legal framework. Your role is to provide clear, accurate, and accessible summaries of Indian laws, acts, and amendments. You must tailor your response based on the user's specific requirements for difficulty, tone, and length. **IMPORTANT: Do not explain your process or plan. Directly provide the final, formatted legal summary as the only output.**"
     }]
   };
   
@@ -65,3 +65,4 @@ export default async function handler(request, response) {
     return response.status(500).json({ message: 'An internal error occurred.' });
   }
 }
+

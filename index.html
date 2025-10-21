@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidhiDesk - AI Legal Summarizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-select, .form-input {
+            background-color: #1a1a2e;
+            border-color: #4a4a6a;
+            color: #e0e0e0;
+        }
+        .form-select:focus, .form-input:focus {
+            --tw-ring-color: #9f7aea;
+            border-color: #9f7aea;
+        }
+        .loader {
+            border-top-color: #9f7aea;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #4a4a6a;
+            border-radius: 10px;
+            border: 2px solid #1a1a2e;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #6c56b7;
+        }
+    </style>
+</head>
+<body class="bg-[#0f0f1b] text-gray-200 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-[#1a1a2e]/50 backdrop-blur-sm border-b border-purple-900/50 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+                <h1 class="text-2xl font-bold text-white">VidhiDesk</h1>
+            </div>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-colors">
+                User Login
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8 flex-grow">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Hero Section -->
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3">AI-Powered Legal Summaries</h2>
+                <p class="text-lg text-purple-300">Demystifying Indian laws, acts, and amendments at your fingertips.</p>
+            </div>
+
+            <!-- Form Section -->
+            <div class="bg-[#1a1a2e] p-8 rounded-2xl shadow-2xl border border-purple-900/50 mb-8">
+                <form id="law-form">
+                    <div class="mb-6">
+                        <label for="law-name" class="block mb-2 text-sm font-medium text-gray-300">Law, Act, or Amendment</label>
+                        <input type="text" id="law-name" name="law-name" class="form-input w-full p-3 rounded-lg border focus:outline-none" placeholder="e.g., 'The Right to Information Act, 2005' or 'Article 370'" required>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-6">
+                        <!-- Difficulty -->
+                        <div>
+                            <label for="difficulty" class="block mb-2 text-sm font-medium text-gray-300">Difficulty</label>
+                            <select id="difficulty" name="difficulty" class="form-select w-full p-3 rounded-lg border focus:outline-none">
+                                <option value="Simplified">Simplified</option>
+                                <option value="Intermediary">Intermediary</option>
+                                <option value="Bare Act">Bare Act Language</option>
+                            </select>
+                        </div>
+                        <!-- Tone -->
+                        <div>
+                            <label for="tone" class="block mb-2 text-sm font-medium text-gray-300">Tone</label>
+                            <select id="tone" name="tone" class="form-select w-full p-3 rounded-lg border focus:outline-none">
+                                <option value="Informative">Informative</option>
+                                <option value="Academic">Academic</option>
+                                <option value="Professional">Professional</option>
+                                <option value="Casual">Casual</option>
+                            </select>
+                        </div>
+                        <!-- Length -->
+                        <div>
+                            <label for="length" class="block mb-2 text-sm font-medium text-gray-300">Length</label>
+                            <select id="length" name="length" class="form-select w-full p-3 rounded-lg border focus:outline-none">
+                                <option value="Concise">Concise (1-2 paragraphs)</option>
+                                <option value="Brief">Brief (3-5 paragraphs)</option>
+                                <option value="Detailed">Detailed (In-depth)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="w-full md:w-auto px-8 py-3 font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[#1a1a2e]">
+                            Generate Summary
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-container" class="hidden">
+                <div class="bg-[#1a1a2e] p-8 rounded-2xl shadow-2xl border border-purple-900/50">
+                    <!-- Loading Indicator -->
+                    <div id="loader" class="text-center hidden">
+                        <div class="inline-block loader w-12 h-12 border-4 rounded-full" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p class="mt-4 text-purple-300">Analyzing legal texts... Please wait.</p>
+                    </div>
+                    
+                    <!-- Error Message -->
+                    <div id="error-message" class="hidden text-center text-red-400 bg-red-900/50 p-4 rounded-lg"></div>
+
+                    <!-- Summary Output -->
+                    <div id="summary-output">
+                         <h3 id="summary-title" class="text-2xl font-bold text-purple-300 mb-4 border-b-2 border-purple-800 pb-2"></h3>
+                         <div id="summary-content" class="prose prose-invert max-w-none text-gray-300 leading-relaxed"></div>
+                    </div>
+
+                     <!-- Sources -->
+                    <div id="sources-container" class="mt-8 hidden">
+                        <h4 class="text-lg font-semibold text-purple-300 mb-3">Sources</h4>
+                        <ul id="sources-list" class="list-disc list-inside space-y-2 text-sm">
+                            <!-- Sources will be injected here by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1a1a2e]/50 border-t border-purple-900/50 mt-8">
+        <div class="container mx-auto px-6 py-4 text-center text-sm text-gray-400">
+            <p>&copy; 2025 VidhiDesk. All rights reserved. For informational purposes only.</p>
+        </div>
+    </footer>
+
+<script>
+    const form = document.getElementById('law-form');
+    const resultsContainer = document.getElementById('results-container');
+    const loader = document.getElementById('loader');
+    const errorMessage = document.getElementById('error-message');
+    const summaryOutput = document.getElementById('summary-output');
+    const summaryTitle = document.getElementById('summary-title');
+    const summaryContent = document.getElementById('summary-content');
+    const sourcesContainer = document.getElementById('sources-container');
+    const sourcesList = document.getElementById('sources-list');
+
+    // --- Gemini API Call ---
+    async function getSummary(lawName, difficulty, tone, length) {
+        // The API URL now points to our own serverless function
+        const apiUrl = '/api/generate';
+
+        // The payload now only contains the data our function needs.
+        // The system prompt and other details are handled on the server.
+        const payload = {
+            lawName,
+            difficulty,
+            tone,
+            length,
+        };
+        
+        // No more retry loop here, our serverless function handles the direct API call.
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content?.parts?.[0]?.text) {
+                const text = result.candidates[0].content.parts[0].text;
+                const groundingMetadata = result.candidates[0].groundingMetadata;
+                let sources = [];
+                if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                    sources = groundingMetadata.groundingAttributions
+                        .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
+                        .filter(source => source.uri && source.title);
+                }
+                return { text, sources };
+            } else {
+                console.error('Unexpected API response structure:', result);
+                let message = "Could not retrieve a valid summary from the AI.";
+                if(result.promptFeedback && result.promptFeedback.blockReason){
+                    message += ` Reason: ${result.promptFeedback.blockReason}. Please adjust your query.`
+                }
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.error(`Error in getSummary: ${error.message}`);
+            throw error; // Re-throw the error to be caught by the event listener
+        }
+    }
+
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Reset UI
+        resultsContainer.classList.remove('hidden');
+        summaryOutput.classList.add('hidden');
+        sourcesContainer.classList.add('hidden');
+        errorMessage.classList.add('hidden');
+        loader.classList.remove('hidden');
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+        const formData = new FormData(form);
+        const lawName = formData.get('law-name');
+        const difficulty = formData.get('difficulty');
+        const tone = formData.get('tone');
+        const length = formData.get('length');
+
+        try {
+            const result = await getSummary(lawName, difficulty, tone, length);
+            
+            // Render the results
+            summaryTitle.textContent = `Summary of: ${lawName}`;
+            // Basic Markdown to HTML conversion
+            let htmlContent = result.text
+                .replace(/^### (.*$)/gim, '<h3 class="text-xl font-semibold mt-4 mb-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-6 mb-3">$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-extrabold mt-8 mb-4">$1</h1>')
+                .replace(/\*\*(.*)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code class="bg-gray-700 text-purple-300 rounded px-1 py-0.5">$1</code>')
+                .replace(/\n/g, '<br>');
+            summaryContent.innerHTML = htmlContent;
+
+            // Render sources if available
+            if (result.sources && result.sources.length > 0) {
+                sourcesList.innerHTML = '';
+                result.sources.forEach(source => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = source.uri;
+                    a.textContent = source.title;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'text-blue-400 hover:underline';
+                    li.appendChild(a);
+                    sourcesList.appendChild(li);
+                });
+                sourcesContainer.classList.remove('hidden');
+            }
+            
+            summaryOutput.classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Error fetching summary:', error);
+            errorMessage.textContent = `An error occurred while generating the summary. ${error.message}`;
+            errorMessage.classList.remove('hidden');
+        } finally {
+            loader.classList.add('hidden');
+        }
+    });
+
+</script>
+</body>
+</html>
 

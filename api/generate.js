@@ -21,18 +21,18 @@ export default async function handler(request, response) {
   const model = 'gemini-2.5-flash-preview-09-2025';
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-  // 4. Construct the payload with a STRONGER instruction
+  // 4. Construct the payload with an EVEN STRONGER instruction
   const systemInstruction = {
     role: "model",
     parts: [{
-        text: "You are VidhiDesk, an expert AI legal assistant specializing in the Indian Constitution and its legal framework. Your role is to provide clear, accurate, and accessible summaries of Indian laws, acts, and amendments. You must tailor your response based on the user's specific requirements for difficulty, tone, and length. **IMPORTANT: Do not explain your process or plan. Directly provide the final, formatted legal summary as the only output.**"
+        text: "You are an AI legal summarizer. Your only function is to generate a legal summary based on the user's request. **Your entire response must consist ONLY of the Markdown-formatted summary.** Do not include any pre-summary text, introductory phrases, explanations of your process, or any text other than the summary itself. Your output is final."
     }]
   };
   
   const userPrompt = {
       role: "user",
       parts: [{
-          text: `Please provide a ${length} summary of the Indian law/act/amendment: '${lawName}'. The summary should be written in a ${tone} tone and at a ${difficulty} difficulty level. Format the output in Markdown.`
+          text: `Generate a ${length}, ${difficulty} summary of the following Indian law in a ${tone} tone: '${lawName}'.`
       }]
   };
 

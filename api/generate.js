@@ -12,7 +12,14 @@ export default async function handler(request, response) {
   
   // Get the Hugging Face token from Vercel's environment variables
   const accessToken = process.env.HF_ACCESS_TOKEN;
+
+  // --- DEBUGGING LINE ---
+  // This will show us the value of the token in the Vercel logs.
+  console.log(`Checking for access token. Found: ${accessToken ? 'a token' : 'undefined'}`);
+  // --- END DEBUGGING ---
+
   if (!accessToken) {
+    // This is the line that's causing your error. Let's find out why.
     return response.status(500).json({ message: 'Hugging Face token not configured.' });
   }
 

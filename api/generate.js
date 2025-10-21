@@ -14,7 +14,7 @@ export default async function handler(request, response) {
   const accessToken = process.env.HF_ACCESS_TOKEN;
 
   // --- DEBUGGING LINE ---
-  // This will show us the value of the token in the Vercel logs.
+  // We'll leave this here just in case the other error comes back.
   console.log(`Checking for access token. Found: ${accessToken ? 'a token' : 'undefined'}`);
   // --- END DEBUGGING ---
 
@@ -23,15 +23,14 @@ export default async function handler(request, response) {
     return response.status(500).json({ message: 'Hugging Face token not configured.' });
   }
 
-  // We will use a popular and capable open-source model from Mistral AI
-  const model = 'mistralai/Mistral-7B-Instruct-v0.2';
+  // --- NEW MODEL ---
+  // We are switching to Google's Gemma model, which is very reliable.
+  const model = 'google/gemma-7b-it';
   const apiUrl = `https://api-inference.huggingface.co/models/${model}`;
 
   // Open-source models often need a specific prompt format.
-  // The '[INST]' and '[/INST]' tags tell the model where the instruction starts and ends.
-  const prompt = `[INST] You are an AI legal summarizer. Your only function is to generate a legal summary based on the user's request. Your entire response must consist ONLY of the Markdown-formatted summary.
-  
-  Generate a ${length}, ${difficulty} summary of the following Indian law in a ${tone} tone: '${lawName}'. [/INST]`;
+  // Gemma uses a different format from Mistral.
+  const prompt = `<start_of_turn>user\nYou are an AI legal summarizer. Your only function is to generate a legal summary based on the user's request. Your entire response must consist ONLY of the Markdown-formatted summary. Generate a ${length}, ${difficulty} summary of the following Indian law in a ${tone} tone: '${lawName}'.<end_of_turn>\n<start_of_turn>model\n`;
 
   try {
     const hfResponse = await fetch(apiUrl, {

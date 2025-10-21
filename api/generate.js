@@ -13,7 +13,7 @@ export default async function handler(request, response) {
   }
   
   // 3. Get the secret API key from environment variables (this is the secure part)
-  const apiKey = process.env.AIzaSyDiAhsewe7AlZuVfQR8E_9jL2kxen8hGlc;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return response.status(500).json({ message: 'API key not configured.' });
   }
